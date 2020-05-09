@@ -1,0 +1,391 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Action_Magic</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-05-08"><meta name="DC.source" content="Action_Magic.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#3">Initialize Plot ************************************************</a></li><li><a href="#4">NESTED functions ########################################</a></li><li><a href="#6">END OF THE WORLD</a></li></ul></div><pre class="codeinput"><span class="comment">% GUI for visual Inspection</span>
+<span class="keyword">function</span> Action_Magic(Experiment,Xcurrent,Xvoltage,FR,APs,PulseP,fs)
+</pre><pre class="codeinput"><span class="comment">% Initialize</span>
+AxisLimitVoltage=[min(Xvoltage(:)),max(Xvoltage(:))];
+AxisLimitCurrent=[min(Xcurrent(:)),max(Xcurrent(:))];
+[Nsignals,Frames]=size(Xcurrent);
+<span class="comment">% FRout=FR;</span>
+<span class="comment">% APsOut=APs;</span>
+x=[]; y=[]; APsData=[]; Parameters=[]; ActionPotentials=[];
+AmpThreshold=0;
+fprintf(<span class="string">'Loading GUI...'</span>)
+checksignals=figure(<span class="string">'numbertitle'</span>,<span class="string">'off'</span>,<span class="keyword">...</span>
+            <span class="string">'position'</span>,[46 42 600 450],<span class="keyword">...</span>
+            <span class="string">'keypressfcn'</span>,@manual_ctrl,<span class="keyword">...</span>
+            <span class="string">'CloseRequestFcn'</span>,@close_and_update);
+ax1=subplot(2,1,1); <span class="comment">%  Voltage - - - - - - - - - - - - - - -</span>
+set(ax1,<span class="string">'NextPlot'</span>,<span class="string">'replacechildren'</span>);
+set(ax1,<span class="string">'ButtonDownFcn'</span>,@set_threshold);
+ax2=subplot(2,1,2); <span class="comment">% Current - - - - - - - - - - -</span>
+set(ax2,<span class="string">'NextPlot'</span>,<span class="string">'replacechildren'</span>);
+linkaxes([ax1,ax2],<span class="string">'x'</span>);
+</pre><pre class="codeoutput error">Error using Action_Magic (line 4)
+Not enough input arguments.
+</pre><h2>Initialize Plot ************************************************<a name="3"></a></h2><pre class="codeinput">n=1;
+checksignals.Name=[<span class="string">' Action Potentials of: '</span>,Experiment];
+Get_Data();
+Plot_Data_Now();
+fprintf(<span class="string">'... Ready!\n'</span>)
+</pre><h2>NESTED functions ########################################<a name="4"></a></h2><pre class="codeinput">    <span class="keyword">function</span> Get_Data()
+        x=Xvoltage(n,:);        <span class="comment">% Voltage</span>
+        y=Xcurrent(n,:);        <span class="comment">% Current</span>
+        APsData=APs{n};         <span class="comment">% Action Potentials</span>
+        Parameters=FR{n,:};     <span class="comment">% Parameters</span>
+    <span class="keyword">end</span>
+
+    <span class="keyword">function</span> Plot_Data_Now()
+        <span class="comment">% VOLTAGE - - - - - - - - - - - - - - - - - - - - - - - - -</span>
+
+        cla(ax1); <span class="comment">% Replot Stuff</span>
+        hold(ax1,<span class="string">'on'</span>)
+        plot(ax1,x,<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,2)
+        <span class="comment">% Highlight Action Potentials</span>
+        <span class="keyword">for</span> m=1:size(APsData,1)
+            plot(ax1,APsData(m,1)+PulseP(1)-1:APsData(m,3)+PulseP(1)-1,<span class="keyword">...</span>
+                x(APsData(m,1)+PulseP(1)-1:APsData(m,3)+PulseP(1)-1),<span class="keyword">...</span>
+                <span class="string">'Color'</span>,[1.0,0,0.4],<span class="string">'LineWidth'</span>,2);
+        <span class="keyword">end</span>
+        grid(ax1,<span class="string">'on'</span>);
+        hold(ax1,<span class="string">'off'</span>)
+        ax1.YLim=AxisLimitVoltage;
+        ax1.XLim=[0,Frames];
+        ylabel(ax1,<span class="string">'Voltage'</span>)
+        ax1.XTick=[0,PulseP(1),PulseP(1)+PulseP(2)*fs-1];
+        <span class="comment">% Label Xticks:</span>
+        <span class="keyword">for</span> ilab=1:numel(ax1.XTick)
+            ax1.XTickLabel{ilab}=num2str(ax1.XTick(ilab)/fs*1000);
+        <span class="keyword">end</span>
+        ylabel(ax1,<span class="string">'Voltage'</span>,<span class="string">'Interpreter'</span>,<span class="string">'Tex'</span>)
+        title(ax1,[<span class="string">'N of Action Potentials='</span>,num2str(Parameters(4))],<span class="keyword">...</span>
+              <span class="string">'FontSize'</span>,8,<span class="string">'FontWeight'</span>,<span class="string">'normal'</span>);
+        <span class="comment">% CURRENT - - - - - - - - - - - - - - - - - - - - - - - - -</span>
+        cla(ax2);
+        hold(ax2,<span class="string">'on'</span>)
+        plot(ax2,y,<span class="string">'k'</span>,<span class="string">'LineWidth'</span>,3)
+        grid(ax2,<span class="string">'on'</span>);
+        hold(ax2,<span class="string">'off'</span>)
+        ax2.YLim=AxisLimitCurrent;
+        ax2.XLim=[0,Frames];
+        ax2.XTick=[0,PulseP(1),PulseP(1)+PulseP(2)*fs-1];
+        ax2.XTickLabel=[];
+        ylabel(ax2,<span class="string">'Current'</span>,<span class="string">'Interpreter'</span>,<span class="string">'Tex'</span>)
+        title(ax2,[<span class="string">'Current Pulse='</span>,num2str(Parameters(2))],<span class="keyword">...</span>
+              <span class="string">'FontSize'</span>,8,<span class="string">'FontWeight'</span>,<span class="string">'normal'</span>);
+        drawnow;
+    <span class="keyword">end</span>
+    <span class="keyword">function</span> manual_ctrl(checksignals,~,~)
+        key=get(checksignals,<span class="string">'CurrentKey'</span>);
+        <span class="keyword">if</span> strcmp(key,<span class="string">'rightarrow'</span>)
+            disp(<span class="string">'Next -------&gt;'</span>)
+            <span class="keyword">if</span> n&lt;Nsignals
+                n=n+1; <span class="comment">% Increases</span>
+            <span class="keyword">else</span>
+                n=Nsignals; <span class="comment">% Stays</span>
+            <span class="keyword">end</span>
+            Get_Data;
+            disp(n)
+<span class="comment">%             update_data;</span>
+            Plot_Data_Now;
+            <span class="comment">% SHOULD SAVE DATA</span>
+        <span class="keyword">elseif</span> strcmp(key,<span class="string">'leftarrow'</span>)
+            disp(<span class="string">'&lt;-- Previous'</span>)
+            <span class="keyword">if</span> n==1
+                n=1;
+            <span class="keyword">else</span>
+                n=n-1;
+            <span class="keyword">end</span>
+            Get_Data;
+            disp(n)
+<span class="comment">%             update_data;</span>
+            Plot_Data_Now;
+            <span class="comment">% Set_Name_Axis</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">function</span> close_and_update(~,~,~)
+        fprintf(<span class="string">'&gt;&gt;Closing: '</span>)
+        checkname=1;
+        <span class="keyword">while</span> checkname==1
+            <span class="comment">% Get Directory</span>
+            DP=pwd;
+            Slashes=find(DP==<span class="string">'\'</span>);
+            DefaultPath=[DP(1:Slashes(end)),<span class="string">'Processed Data'</span>];
+            <span class="keyword">if</span> exist(DefaultPath,<span class="string">'dir'</span>)==0
+                DefaultPath=pwd; <span class="comment">% Current Diretory of MATLAB</span>
+            <span class="keyword">end</span>
+            fprintf(<span class="string">'\n\n [ To update changes, please select the .mat file ] \n\n'</span>)
+            [FileName,PathName] = uigetfile(<span class="string">'*.mat'</span>,[<span class="string">' Pick the Analysis File to SAVE CHANGES '</span>,Experiment],<span class="keyword">...</span>
+                <span class="string">'MultiSelect'</span>, <span class="string">'off'</span>,DefaultPath);
+            <span class="comment">% dotindex=find(FileName=='.');</span>
+            <span class="keyword">if</span> strcmp(FileName(1:end-4),Experiment)
+                checkname=0;
+                <span class="comment">% SAVE DATA</span>
+                save([PathName,FileName],<span class="string">'APs'</span>,<span class="string">'FR'</span>,<span class="string">'-append'</span>);
+                disp([Experiment,<span class="string">'   -&gt; Action Potentials UPDATED (Visual ~ Inspection)'</span>])
+                delete(gcf)
+            <span class="keyword">elseif</span> FileName==0
+                checkname=0;
+                disp(<span class="string">'....CANCELLED'</span>)
+                delete(gcf)
+            <span class="keyword">else</span>
+                disp(<span class="string">'Not the same Experiment!'</span>)
+                disp(<span class="string">'Try again!'</span>)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        delete(checksignals);
+        fprintf(<span class="string">'done.\n'</span>)
+    <span class="keyword">end</span>
+
+    <span class="keyword">function</span> set_threshold(~,~)
+        <span class="comment">% rect: [xmin ymin width height]</span>
+        rect=getrect;
+        AmpThreshold=rect(2);
+        fprintf(<span class="string">'Amplitude Threshold: %2.1f\n'</span>,AmpThreshold);
+        fprintf(<span class="string">'&gt;&gt; Re-Analysing Trace:'</span>)
+        Check4APs()
+        fprintf(<span class="string">'done.\n'</span>)
+        Get_Data();
+        Plot_Data_Now;       <span class="comment">% update plot</span>
+        figure(checksignals) <span class="comment">% Focus on Window</span>
+    <span class="keyword">end</span>
+
+    <span class="keyword">function</span> Check4APs(~,~)
+        xpulse=x(PulseP(1):PulseP(1)+PulseP(2)*fs-1);
+        ActionPotentials=get_APs(xpulse,AmpThreshold);
+        <span class="comment">% update_data: FR &amp; APs</span>
+        FR{n,4}=size(ActionPotentials,1);
+        FR{n,5}=size(ActionPotentials,1)/PulseP(end);
+        APs{n}=ActionPotentials;
+    <span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><h2>END OF THE WORLD<a name="6"></a></h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% GUI for visual Inspection
+function Action_Magic(Experiment,Xcurrent,Xvoltage,FR,APs,PulseP,fs)
+% Initialize
+AxisLimitVoltage=[min(Xvoltage(:)),max(Xvoltage(:))];
+AxisLimitCurrent=[min(Xcurrent(:)),max(Xcurrent(:))];
+[Nsignals,Frames]=size(Xcurrent);
+% FRout=FR;
+% APsOut=APs;
+x=[]; y=[]; APsData=[]; Parameters=[]; ActionPotentials=[]; 
+AmpThreshold=0;
+fprintf('Loading GUI...')
+checksignals=figure('numbertitle','off',...
+            'position',[46 42 600 450],...
+            'keypressfcn',@manual_ctrl,...
+            'CloseRequestFcn',@close_and_update);
+ax1=subplot(2,1,1); %  Voltage - - - - - - - - - - - - - - - 
+set(ax1,'NextPlot','replacechildren');
+set(ax1,'ButtonDownFcn',@set_threshold);
+ax2=subplot(2,1,2); % Current - - - - - - - - - - -
+set(ax2,'NextPlot','replacechildren');
+linkaxes([ax1,ax2],'x');
+%% Initialize Plot **************************************************
+n=1;
+checksignals.Name=[' Action Potentials of: ',Experiment];
+Get_Data();
+Plot_Data_Now();
+fprintf('... Ready!\n')
+%% NESTED functions ########################################
+    function Get_Data()
+        x=Xvoltage(n,:);        % Voltage
+        y=Xcurrent(n,:);        % Current
+        APsData=APs{n};         % Action Potentials
+        Parameters=FR{n,:};     % Parameters
+    end
+
+    function Plot_Data_Now()
+        % VOLTAGE - - - - - - - - - - - - - - - - - - - - - - - - - 
+        
+        cla(ax1); % Replot Stuff
+        hold(ax1,'on')
+        plot(ax1,x,'b','LineWidth',2)
+        % Highlight Action Potentials
+        for m=1:size(APsData,1)
+            plot(ax1,APsData(m,1)+PulseP(1)-1:APsData(m,3)+PulseP(1)-1,...
+                x(APsData(m,1)+PulseP(1)-1:APsData(m,3)+PulseP(1)-1),...
+                'Color',[1.0,0,0.4],'LineWidth',2);
+        end
+        grid(ax1,'on');
+        hold(ax1,'off')
+        ax1.YLim=AxisLimitVoltage;
+        ax1.XLim=[0,Frames];
+        ylabel(ax1,'Voltage')
+        ax1.XTick=[0,PulseP(1),PulseP(1)+PulseP(2)*fs-1];
+        % Label Xticks:
+        for ilab=1:numel(ax1.XTick)
+            ax1.XTickLabel{ilab}=num2str(ax1.XTick(ilab)/fs*1000);
+        end
+        ylabel(ax1,'Voltage','Interpreter','Tex')
+        title(ax1,['N of Action Potentials=',num2str(Parameters(4))],...
+              'FontSize',8,'FontWeight','normal');
+        % CURRENT - - - - - - - - - - - - - - - - - - - - - - - - - 
+        cla(ax2);
+        hold(ax2,'on')
+        plot(ax2,y,'k','LineWidth',3)
+        grid(ax2,'on');
+        hold(ax2,'off')
+        ax2.YLim=AxisLimitCurrent;
+        ax2.XLim=[0,Frames];
+        ax2.XTick=[0,PulseP(1),PulseP(1)+PulseP(2)*fs-1];
+        ax2.XTickLabel=[];
+        ylabel(ax2,'Current','Interpreter','Tex')
+        title(ax2,['Current Pulse=',num2str(Parameters(2))],...
+              'FontSize',8,'FontWeight','normal');
+        drawnow;
+    end
+    function manual_ctrl(checksignals,~,~)
+        key=get(checksignals,'CurrentKey');
+        if strcmp(key,'rightarrow')
+            disp('Next REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH->')
+            if n<Nsignals
+                n=n+1; % Increases
+            else
+                n=Nsignals; % Stays
+            end
+            Get_Data;
+            disp(n)
+%             update_data;
+            Plot_Data_Now;
+            % SHOULD SAVE DATA
+        elseif strcmp(key,'leftarrow')
+            disp('<REPLACE_WITH_DASH_DASH Previous')
+            if n==1
+                n=1;
+            else
+                n=n-1;
+            end
+            Get_Data;
+            disp(n)
+%             update_data;
+            Plot_Data_Now;
+            % Set_Name_Axis
+        end
+    end
+    function close_and_update(~,~,~)
+        fprintf('>>Closing: ')
+        checkname=1;
+        while checkname==1
+            % Get Directory
+            DP=pwd;
+            Slashes=find(DP=='\');
+            DefaultPath=[DP(1:Slashes(end)),'Processed Data'];
+            if exist(DefaultPath,'dir')==0
+                DefaultPath=pwd; % Current Diretory of MATLAB
+            end
+            fprintf('\n\n [ To update changes, please select the .mat file ] \n\n')
+            [FileName,PathName] = uigetfile('*.mat',[' Pick the Analysis File to SAVE CHANGES ',Experiment],...
+                'MultiSelect', 'off',DefaultPath);
+            % dotindex=find(FileName=='.');
+            if strcmp(FileName(1:end-4),Experiment)
+                checkname=0;
+                % SAVE DATA
+                save([PathName,FileName],'APs','FR','-append');
+                disp([Experiment,'   -> Action Potentials UPDATED (Visual ~ Inspection)'])
+                delete(gcf)
+            elseif FileName==0
+                checkname=0;
+                disp('....CANCELLED')
+                delete(gcf)
+            else
+                disp('Not the same Experiment!')
+                disp('Try again!')
+            end
+        end    
+        delete(checksignals);
+        fprintf('done.\n')
+    end
+
+    function set_threshold(~,~)
+        % rect: [xmin ymin width height]
+        rect=getrect;
+        AmpThreshold=rect(2);
+        fprintf('Amplitude Threshold: %2.1f\n',AmpThreshold);
+        fprintf('>> Re-Analysing Trace:')
+        Check4APs()
+        fprintf('done.\n')
+        Get_Data();
+        Plot_Data_Now;       % update plot
+        figure(checksignals) % Focus on Window
+    end
+
+    function Check4APs(~,~)
+        xpulse=x(PulseP(1):PulseP(1)+PulseP(2)*fs-1);
+        ActionPotentials=get_APs(xpulse,AmpThreshold);
+        % update_data: FR & APs
+        FR{n,4}=size(ActionPotentials,1);
+        FR{n,5}=size(ActionPotentials,1)/PulseP(end);
+        APs{n}=ActionPotentials;
+    end
+end
+%% END OF THE WORLD
+##### SOURCE END #####
+--></body></html>
