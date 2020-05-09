@@ -6,4 +6,4 @@ Import_FinderSpikerAPs;
 Action_Magic(Experiment,Xcurrent,Xvoltage,FR,APs,PulseP,fs);
 waitfor(gcf);
 clear
-fprintf('\n>>Complete.')
+fprintf('\n>>Complete.\n')

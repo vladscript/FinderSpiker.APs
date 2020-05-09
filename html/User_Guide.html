@@ -66,12 +66,13 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1><img src="User_Guide_eq01596490704407714654.png" alt="$\bf{FinderSpiker.APs}$"></h1><!--introduction--><p><b>SOURCE</b> : <a href="https://github.com/vladscript/FinderSpiker.APs">https://github.com/vladscript/FinderSpiker.APs</a></p><p><tt>Steps Guide</tt></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">1. AUTOMATIC FIRING RATES DETECTION</a></li><li><a href="#2">2. REVIEW DATA:</a></li></ul></div><h2>1. AUTOMATIC FIRING RATES DETECTION<a name="1"></a></h2><div><ul><li>&gt;&gt;FinderSpiker_ActionPotentials</li></ul></div><h2>2. REVIEW DATA:<a name="2"></a></h2><div><ul><li>&gt;&gt;Action_Potentials_Check</li></ul></div><pre class="language-matlab">Use <span class="string">mode:</span>
--    Left and <span class="string">Right</span> <span class="string">Arrows</span> <span class="string">Switch</span> <span class="string">Current</span> <span class="string">Pulse</span>
--    Click on <span class="string">VOltage</span> <span class="string">Axis</span> <span class="string">to</span> <span class="string">define</span> <span class="string">a</span> <span class="string">Threshold</span>
--    Close and <span class="string">SAVE</span> <span class="string">to</span> <span class="string">UPDATE</span>
--    Close and <span class="string">CANCEL</span> <span class="string">to</span> <span class="string">DISCARD</span>
-</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+  </style></head><body><div class="content"><h1><img src="User_Guide_eq01596490704407714654.png" alt="$\bf{FinderSpiker.APs}$"></h1><!--introduction--><p><b>SOURCE</b> : <a href="https://github.com/vladscript/FinderSpiker.APs">https://github.com/vladscript/FinderSpiker.APs</a></p><p><tt>Steps Guide</tt></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">1. AUTOMATIC FIRING RATES DETECTION</a></li><li><a href="#2">2. REVIEW DATA:</a></li></ul></div><h2>1. AUTOMATIC FIRING RATES DETECTION<a name="1"></a></h2><p>RUN:</p><div><ul><li>&gt;&gt;FinderSpiker_ActionPotentials</li></ul></div><p><b>Input</b> (see Demo Data)</p><pre class="language-matlab">-ABF
+-CSV V &amp; I files
+-XLSX
+</pre><p><b>Outputs</b></p><pre class="language-matlab">-   Preview of <span class="string">the</span> <span class="string">Data</span> <span class="string">(single current pulse and voltage record)</span>
+</pre><pre class="language-matlab">-   Feature Table       @ csv File whose columns are:
+</pre><pre>TimeLength_s | CurrentValue | Delta_Current | N_APs | FiringRate | MeanFreq_Hz | Rest_Potential</pre><pre class="language-matlab">-   Action Potentials,APs <span class="string">variable</span>, @mat File <span class="string">which</span> <span class="string">contains</span> <span class="string">for</span> <span class="string">each</span> <span class="string">AP:</span>
+</pre><pre>Onset | Amplitude | EoFR</pre><h2>2. REVIEW DATA:<a name="2"></a></h2><div><ul><li>Load .mat File (only if no data @ workspace)</li></ul></div><p>RUN:</p><div><ul><li>&gt;&gt;Action_Potentials_Check</li></ul></div><p>Use mode:</p><p>- Left and Right Arrows Switch Current Pulse</p><p>- If missed APs: click on the <b>Voltage</b> <b>Axis</b> to define an <b>amplitude</b> threshold using <b>mouse</b> <b>cursor</b></p><p>- Close and SAVE to <b>UPDATE</b></p><p>- Close and CANCEL to <b>DISCARD</b></p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% $\bf{FinderSpiker.APs}$
 % 
@@ -80,17 +81,46 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 % 
 % |Steps Guide|
 %% 1. AUTOMATIC FIRING RATES DETECTION
-%
+% 
+% RUN:
+% 
 % * >>FinderSpiker_ActionPotentials
+% 
+% *Input* (see Demo Data)
+% 
+%   -ABF
+%   -CSV V & I files
+%   -XLSX
+% 
+% *Outputs*
+% 
+%   -   Preview of the Data (single current pulse and voltage record)
+% 
+%   -   Feature Table       @ csv File whose columns are:
+% 
+%  TimeLength_s | CurrentValue | Delta_Current | N_APs | FiringRate | MeanFreq_Hz | Rest_Potential
+% 
+%   -   Action Potentials,APs variable, @mat File which contains for each AP:
+% 
+%  Onset | Amplitude | EoFR
 % 
 %% 2. REVIEW DATA:
 % 
+% * Load .mat File (only if no data @ workspace)
+% 
+% RUN:
+% 
 % * >>Action_Potentials_Check
 % 
-%   Use mode:
-%   -    Left and Right Arrows Switch Current Pulse 
-%   -    Click on VOltage Axis to define a Threshold
-%   -    Close and SAVE to UPDATE
-%   -    Close and CANCEL to DISCARD
+% Use mode:
+% 
+% - Left and Right Arrows Switch Current Pulse 
+% 
+% - If missed APs: click on the *Voltage* *Axis* to define an *amplitude* threshold using
+% *mouse* *cursor*
+% 
+% - Close and SAVE to *UPDATE*
+% 
+% - Close and CANCEL to *DISCARD*
 ##### SOURCE END #####
 --></body></html>

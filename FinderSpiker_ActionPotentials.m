@@ -55,7 +55,7 @@ fprintf('>>Experiment ID: %s\n',Experiment);
 fprintf('>>Completed Automatic Detection\n')
 %% Save mat File
 fprintf('>>Saving data: ')
-FolderNamePD='\Processed Data';
+FolderNamePD='Processed Data\';
 % Direcotry to Save: Up from  this one (pwd)
 FileDirSave=pwd;
 slashes=find(FileDirSave=='\');
@@ -64,18 +64,22 @@ if ~isdir([FileDirSave,FolderNamePD])
     fprintf('Folder [%s] created,',FolderNamePD)
     mkdir([FileDirSave,FolderNamePD]);
 end
-save([FileDirSave,FolderNamePD,'\',Experiment,'.mat'],'Experiment','Xcurrent',...
+save([FileDirSave,FolderNamePD,Experiment,'.mat'],'Experiment','Xcurrent',...
     'Xvoltage','fs','FR','APs','PulseP');
 fprintf('done.\n')
 %% Save Table
 fprintf('>>Saving Table: ')
-FolderTable='\Firing Tables';
+FolderTable='Firing Tables\';
 if ~isdir([FileDirSave,FolderTable])
     fprintf('Directory [%s] created',FolderTable)
     mkdir([FileDirSave,FolderTable]);
 end
-writetable(FR,[FileDirSave,FolderTable,'\',Experiment,'_FR.csv'],...
+writetable(FR,[FileDirSave,FolderTable,Experiment,'_FR.csv'],...
         'Delimiter',',','QuoteStrings',true);
 fprintf('done.\n')
 disp(FR);
+fprintf('>>Table saved @: \n%s\n%s\n',...
+    [FileDirSave,FolderTable],[Experiment,'_FR.csv'])
+fprintf('>>APs Intel @: \n%s\n%s\n',...
+    [FileDirSave,FolderNamePD],[Experiment,'.mat'])
 fprintf('>>For Visual Inspection Run: \n>>Action_Potentials_Check\n')

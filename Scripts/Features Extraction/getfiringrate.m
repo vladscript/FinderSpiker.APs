@@ -102,6 +102,7 @@ fprintf('>>Detected records with Action Potentials: %i\n',sum(IndxAPs));
 fprintf('>>Detecting Action Potentials:\n');
 % 2nd Loop for Action Potentials
 N_APs=zeros(Nsteps,1);
+MeanFreq=zeros(Nsteps,1);
 RowNames=cell(Nsteps,1);
 for n=1:Nsteps
     % Read Records
@@ -111,6 +112,9 @@ for n=1:Nsteps
     if IndxAPs(n)
         ActionPotentials=get_APs(xpulse);
         N_APs(n)=size(ActionPotentials,1);
+        if N_APs(n)>1
+            MeanFreq(n)=1/(mean(diff(ActionPotentials(:,1)))/fs); %Hz
+        end
     else
         ActionPotentials=[];
     end
@@ -119,9 +123,10 @@ for n=1:Nsteps
 end
 Rate_APs=N_APs/PulseTime;
 TimePulse=repmat(PulseTime,Nsteps,1);
-FR=table(TimePulse,AmplitudePulse,StepCurrent,N_APs,Rate_APs,Vrest,...
+FR=table(TimePulse,AmplitudePulse,StepCurrent,N_APs,Rate_APs,MeanFreq,Vrest,...
     'RowNames',RowNames,...
-'VariableNames',{'Time_Pulse_s','Current_Value','Delta_Current',...
-                'N_APs','Firing_Rate','Rest_Potential'});
-% Current Amp | Step Curr Amp | N APs | Firing Rate | Vrest | VThreshold
+'VariableNames',{'TimeLength_s','CurrentValue','Delta_Current',...
+                'N_APs','FiringRate','MeanFreq_Hz','Rest_Potential'});
+% 'TimeLength_s','CurrentValue','Delta_Current',...
+% 'N_APs','FiringRate','MeanFreq_Hz','Rest_Potential'
 %% Get Table and Save Results

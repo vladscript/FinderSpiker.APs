@@ -115,23 +115,32 @@ fprintf('... Ready!\n')
             fprintf('\n\n [ To update changes, please select the .mat file ] \n\n')
             [FileName,PathName] = uigetfile('*.mat',[' Pick the Analysis File to SAVE CHANGES ',Experiment],...
                 'MultiSelect', 'off',DefaultPath);
-            % dotindex=find(FileName=='.');
             if strcmp(FileName(1:end-4),Experiment)
                 checkname=0;
                 % SAVE DATA
                 save([PathName,FileName],'APs','FR','-append');
-                disp([Experiment,'   -> Action Potentials UPDATED (Visual ~ Inspection)'])
+                fprintf('Action Potentials UPDATED (Visual ~ Inspection)@%s\n',Experiment)
+                % Update CSV File
+                fprintf('>>Overwritting Table: ')
+                FileDirSave=pwd;
+                slashes=find(FileDirSave=='\');
+                FileDirSave=FileDirSave(1:slashes(end));
+                FolderTable='Firing Tables\';
+                writetable(FR,[FileDirSave,FolderTable,'\',Experiment,'_FR.csv'],...
+                                    'Delimiter',',','QuoteStrings',true);
+                fprintf('done.\n')
                 delete(gcf)
             elseif FileName==0
                 checkname=0;
-                disp('....CANCELLED')
+                fprintf('Changes DISCARDED @%s',Experiment)
                 delete(gcf)
             else
-                disp('Not the same Experiment!')
+                fprintf('Not the same Experiment:\n%s & %s\n',FileName,Experiment)
                 disp('Try again!')
             end
         end    
         delete(checksignals);
+        disp(FR);
         fprintf('done.\n')
     end
 
