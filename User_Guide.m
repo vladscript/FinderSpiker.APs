@@ -1,7 +1,7 @@
 %% $\bf{FinderSpiker.APs}$
 % 
 % *SOURCE* :
-% <https://github.com/vladscript/>
+% <https://github.com/vladscript/FinderSpiker.APs>
 % 
 % |Steps Guide|
 %% 1. AUTOMATIC FIRING RATES DETECTION
