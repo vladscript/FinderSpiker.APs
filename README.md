@@ -7,6 +7,8 @@
 * Current Squared Steps 
 * Voltage Recordings
 
+# See [**Quick User Guide**](http://htmlpreview.github.io/?https://github.com/vladscript/FinderSpiker.APs/blob/master/html/User_Guide.html)
+
 Reads CSV, EXCEL and ABF files (version <2)
 
 ## INPUT FILES:
@@ -32,5 +34,5 @@ EXPERIMENT_ID.mat @ '.../FinderSPike.APs/Processed Data/' folder
 
 
 
-* 3hd Party Software
+### 3hd Party Software
 - Harald Hentschke (2020). [abfload](https://www.mathworks.com/matlabcentral/fileexchange/6190-abfload) MATLAB Central File Exchange.# FinderSpiker.APs
