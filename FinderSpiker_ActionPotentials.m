@@ -24,7 +24,7 @@ fprintf('   Time      in ms\n')
 fprintf('   Voltage   in mV\n')
 fprintf('   Current   in pA\n')
 while choiceFile==0
-    choiceFile = menu('Choose a Data File Type','ABF','CSV','XLSX');
+    choiceFile = menu('Choose a Data File Type','ABF (pCAMP v<10)','CSV (ImPatch Files)','XLSX (copy-paste)');
 end
 switch choiceFile
     case 1

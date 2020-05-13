@@ -9,7 +9,10 @@
 
 # See [**Quick User Guide**](http://htmlpreview.github.io/?https://github.com/vladscript/FinderSpiker.APs/blob/master/html/User_Guide.html)
 
-Reads CSV, EXCEL and ABF files (version <2)
+# Reads Data from
+## ImPatch Files (Current & Voltage Files)CSV, 
+## pCLAMO files [ABF](https://mdc.custhelp.com/app/answers/detail/a_id/16506/~/pclamp%3A-versions-of-the-abf-file-format-are-associated-with-which-software) (ver [abfload.m](https://github.com/fcollman/abfload))
+## copy-paste @EXCEL from newer versions of pCLAMP
 
 ## INPUT FILES:
 

@@ -15,15 +15,23 @@ DefaultPath=pwd;
 % Print Details:
 clc
 fprintf('\n*** File %s Details ***\n',FileName)
-fprintf('>>Version File: %s\n',hinfo.fFileSignature);
-DataDate=num2str( hinfo.uFileStartDate );
-DateVector = [str2num(DataDate(1:4)),str2num(DataDate(end-3:end-2)),...
-    str2num(DataDate(end-1:end)),6,6,6];
-formatOut = 'dd/mmm/yyyy';
-DateExp=datestr(DateVector,formatOut);
-fprintf('>>Experiment Date: %s \n',DateExp);
-TimeExp=datestr(seconds(hinfo.uFileStartTimeMS*1-3/3600),'HH:MM:SS PM');
-fprintf('>>Experiment Start Time: %s \n',TimeExp);
+fprintf('>>Version File: %s',hinfo.fFileSignature);
+switch hinfo.fFileSignature
+    case 'ABF ' % ** note the blank
+        DataDate=hinfo.lFileStartTime;
+        fprintf('%3.2f\n',hinfo.fFileVersionNumber)
+    case 'ABF2'
+        % Data Date Experiment Info:
+        DataDate=num2str( hinfo.uFileStartDate);
+        DateVector = [str2num(DataDate(1:4)),str2num(DataDate(end-3:end-2)),...
+        str2num(DataDate(end-1:end)),6,6,6];
+        formatOut = 'dd/mmm/yyyy';
+        DateExp=datestr(DateVector,formatOut);
+        fprintf(': 2\n>>Experiment Date: %s \n',DateExp);
+        TimeExp=datestr(seconds(hinfo.uFileStartTimeMS*1-3/3600),'HH:MM:SS PM');
+        fprintf('>>Experiment Start Time: %s \n',TimeExp);
+end
+% Channels Intel
 fprintf('>>Channels & Units:\n')
 for i=1:hinfo.nADCNumChannels
     fprintf('  %s -> %s\n\n',hinfo.recChNames{i},hinfo.recChUnits{i});
