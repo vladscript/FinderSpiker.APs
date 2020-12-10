@@ -2,7 +2,11 @@
 function Action_Magic(Experiment,Xcurrent,Xvoltage,FR,APs,PulseP,fs)
 % Initialize
 AxisLimitVoltage=[min(Xvoltage(:)),max(Xvoltage(:))];
-AxisLimitCurrent=[min(Xcurrent(:)),max(Xcurrent(:))];
+if min(Xcurrent(:))<max(Xcurrent(:))
+    AxisLimitCurrent=[min(Xcurrent(:)),max(Xcurrent(:))];
+else
+    AxisLimitCurrent=[min(Xcurrent(:))-10,max(Xcurrent(:))+10];
+end
 [Nsignals,Frames]=size(Xcurrent);
 % FRout=FR;
 % APsOut=APs;

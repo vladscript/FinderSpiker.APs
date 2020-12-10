@@ -37,11 +37,52 @@ ymax=Xcurrent(IndxMaxCP,:);
 [~,StartPulseSample]=max(diff(ymax));
 [~,EndPulseSample]=min(diff(ymax));
 PulseTime=(EndPulseSample-StartPulseSample)/fs;
-PulseP=[StartPulseSample,PulseTime];
+%% Checking Current Recordings:
+meanCurrents=mean(Xcurrent,2);
+if or(PulseTime<=0 , round(mean(diff(meanCurrents)))==0)
+    fprintf('\n!>>Probable corrupted current recordings\n')
+    
+    % Detect from VOltage Recordings
+    fprintf('\n>>Searching Pulse Parameters:')
+    [StartPulseAuto, LengthPulseAuto] = pulsefromvoltage(Xvoltage,fs);
+    AutoA=num2str(round(StartPulseAuto/fs*1000));
+    AutoB=num2str(round(LengthPulseAuto/fs*1000));
+    fprintf(' done.\n')
+    % Enter Manually Current Pulse Time Parameters:
+    % Display Current Pulse
+    hcurrent=figure('Position',[403 484 353 182],'MenuBar','none',...
+    'Name','Current Pulse','NumberTitle','off','ToolBar','none');
+    timecurrent=[1 2 2 3 4 5 5 6 7 8 9];
+    generpulse =[0 0 1 1 1 1 0 0 0 0 0];
+    axescurr=subplot(1,1,1);
+    plot(axescurr,timecurrent,generpulse,'Color','k','LineWidth',2)
+    annotation('doublearrow',[0.275,0.525],[0.4,0.4])
+    annotation('textbox',[0.375,0.4 0.1 0.1],'String','B','LineStyle','none')
+%            'String','B')
+    axescurr.YTick=[];
+    axescurr.XTick=2;
+    axescurr.XTickLabel='A';
+    axescurr.Box='off';
+    axescurr.XColor=[0,0,0];
+    axescurr.Color=[1,1,1];
+    % Display Text Read
+    AnsW = inputdlg({'A [ms]','B [ms]'},...
+              'Pulse Parameters', [1 60; 1 60],{AutoA,AutoB}); 
+    waitfor(AnsW);
+    delete(hcurrent);
+    
+    StartPulseSample=str2num(AnsW{1})*fs/1000; % SAMPLES
+    
+    PulseTime=str2num(AnsW{2})/1000; % SEC
+    EndPulseSample=PulseTime*fs+StartPulseSample;
+    
+end
+%% Print Current Parameters
 fprintf('>>Current Pulse:   ___|¯¯|_____\n')
 fprintf('>>Start Time:      %3.1f ms\n',StartPulseSample/fs*1000)
 fprintf('>>Pulse Length:    %3.1f ms\n',PulseTime*1000)
 fprintf('>>Record Length:   %3.1f ms\n',size(Xcurrent,2)/fs*1000)
+PulseP=[StartPulseSample,PulseTime];
 
 %% Main Loops
 % Current Amp | Step Curr Amp | N APs | Firing Rate | Vrest | VThreshold
@@ -98,6 +139,7 @@ end
 IndxAPs=zeros(Nsteps,1);
 % var(Voltage with APs )>var(Voltage without APs ) :
 IndxAPs(StatsFeaturesPulse(:,4)>max(StatsFeaturesBasal(:,4)))=1;
+% CHECK
 fprintf('>>Detected records with Action Potentials: %i\n',sum(IndxAPs));
 fprintf('>>Detecting Action Potentials:\n');
 % 2nd Loop for Action Potentials
