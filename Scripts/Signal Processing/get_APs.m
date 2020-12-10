@@ -34,11 +34,13 @@ if numel(PeakPositions)>0
         end
         Npeak=PeakPositions(n);
         PreOnsets=PreValleys(PreValleys<Npeak);
-        Onset=PreOnsets(end);
-        [~,Nvalley]=min(xden(Npeak:postPeak));
-        Ampl=xden(Npeak)-xden(Onset);
-        EoFR=Npeak+Nvalley-1;
-        ActionPotentials(n,:)=[Onset,Ampl,EoFR];
+        if numel(PreOnsets)>0
+            Onset=PreOnsets(end);
+            [~,Nvalley]=min(xden(Npeak:postPeak));
+            Ampl=xden(Npeak)-xden(Onset);
+            EoFR=Npeak+Nvalley-1;
+            ActionPotentials(n,:)=[Onset,Ampl,EoFR];
+        end
     end
     fprintf('\n');
 else

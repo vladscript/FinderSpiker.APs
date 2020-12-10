@@ -40,6 +40,6 @@ StartPulse=NegDySamp(end);
 ypulse = smooth(xpulse,round(numel(xpulse)/20),'loess');
 dypulse=diff(ypulse);
 PosDySamp=find(dystart>0);
-LengthPulse=numel(xpulse)+StartPulse+1-PosDySamp(end);
+LengthPulse=numel(xpulse)+numel(xstart)+1-PosDySamp(end);
 
 

@@ -71,10 +71,10 @@ if or(PulseTime<=0 , round(mean(diff(meanCurrents)))==0)
     waitfor(AnsW);
     delete(hcurrent);
     
-    StartPulseSample=str2num(AnsW{1})*fs/1000; % SAMPLES
+    StartPulseSample=round(str2num(AnsW{1})*fs/1000); % SAMPLES
     
     PulseTime=str2num(AnsW{2})/1000; % SEC
-    EndPulseSample=PulseTime*fs+StartPulseSample;
+    EndPulseSample=round(PulseTime*fs+StartPulseSample);
     
 end
 %% Print Current Parameters
@@ -100,9 +100,12 @@ for n=1:Nsteps
     % Read Records
     y=Xcurrent(n,:);
     x=Xvoltage(n,:);
+%     FinaleSeg=round(mean([EndPulseSample,numel(y)]));
     % Basal Values
     ybasal=y([1:StartPulseSample-1,EndPulseSample+1:end]);
     xbasal=x([1:StartPulseSample-1,EndPulseSample+1:end]);
+%     ybasal=y([1:StartPulseSample-1,FinaleSeg:end]);
+%     xbasal=x([1:StartPulseSample-1,FinaleSeg:end]);
     % Pulse Values
     ypulse=y(StartPulseSample:EndPulseSample);
     xpulse=x(StartPulseSample:EndPulseSample);
