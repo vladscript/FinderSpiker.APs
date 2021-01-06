@@ -149,23 +149,45 @@ fprintf('>>Detecting Action Potentials:\n');
 N_APs=zeros(Nsteps,1);
 MeanFreq=zeros(Nsteps,1);
 RowNames=cell(Nsteps,1);
+AverageAmp=[];
+% AverageDur=[];
 for n=1:Nsteps
     % Read Records
     x=Xvoltage(n,:);
     % Pulse Values
     xpulse=x(StartPulseSample:EndPulseSample);
     if IndxAPs(n)
+        % [onset,Amplitude,EoFR]
         ActionPotentials=get_APs(xpulse);
         N_APs(n)=size(ActionPotentials,1);
         if N_APs(n)>1
             MeanFreq(n)=1/(mean(diff(ActionPotentials(:,1)))/fs); %Hz
         end
+        AverageAmp=[AverageAmp,mean(ActionPotentials(:,2))];
+%         AverageDur=[AverageDur,mean(ActionPotentials(:,3)-ActionPotentials(:,1))];
     else
         ActionPotentials=[];
     end
     APs{n}=ActionPotentials;
     RowNames{n}=['Pulse_',num2str(n)];
 end
+% Recover APs
+AvgAmp=mean(AverageAmp);
+% AvgDur=mean(AverageDur)/fs*1000; %[ms]
+ReCHCKIndex=find(StatsFeaturesPulse(IndxAPs==0,1)>AvgAmp);
+for n=1:numel(ReCHCKIndex)
+    fprintf('Recovered signal: %i\n',ReCHCKIndex(n))
+    x=Xvoltage(ReCHCKIndex(n),:);
+    % Pulse Values
+    xpulse=x(StartPulseSample:EndPulseSample);
+    ActionPotentials=get_APs(xpulse);
+    N_APs(ReCHCKIndex(n))=size(ActionPotentials,1);
+    if N_APs(ReCHCKIndex(n))>1
+        MeanFreq(ReCHCKIndex(n))=1/(mean(diff(ActionPotentials(:,1)))/fs); %Hz
+    end
+    APs{ReCHCKIndex(n)}=ActionPotentials;
+end
+% Get Measures:
 Rate_APs=N_APs/PulseTime;
 TimePulse=repmat(PulseTime,Nsteps,1);
 FR=table(TimePulse,AmplitudePulse,StepCurrent,N_APs,Rate_APs,MeanFreq,Vrest,...

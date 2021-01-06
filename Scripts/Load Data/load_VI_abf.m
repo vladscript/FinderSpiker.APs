@@ -54,7 +54,7 @@ end
 fprintf('\ndone.\n')
 %% Preview Data
 signalindex=hinfo.lActualEpisodes;
-DownSamplingFactor=20;
+DownSamplingFactor=30;
 currentpulse=downsample( Xcurrent(signalindex,:),DownSamplingFactor);
 voltagerecord=downsample( Xvoltage(signalindex,:),DownSamplingFactor);
 timevector=downsample(linspace(0,hinfo.sweepLengthInPts*ts,hinfo.sweepLengthInPts),DownSamplingFactor);

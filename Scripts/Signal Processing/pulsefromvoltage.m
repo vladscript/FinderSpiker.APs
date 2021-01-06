@@ -30,7 +30,7 @@ Indexes=find(x<InterValue);
 AlphaIndex=find(diff(Indexes)>1);
 % Segments of the Signal
 xstart=x(1:Indexes(AlphaIndex(1)));
-xpulse=x(Indexes(AlphaIndex(1)):Indexes(AlphaIndex(end)));
+xpulse=x(Indexes(AlphaIndex(1)):Indexes(AlphaIndex(end)+1));
 % Start of the Pulse
 ystart = smooth(xstart,20);
 dystart=diff(ystart);

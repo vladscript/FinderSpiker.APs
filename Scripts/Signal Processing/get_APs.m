@@ -3,7 +3,7 @@
 %   xpulse: voltage signal of the pulse interval
 %   Threshold: varargin
 % Output
-%   ActionPotentialsTimes: [onset,Amplitude,EoFR]
+%   ActionPotentialsTimes: [onset,Amplitude,EndofFirstRepolarization]
 function ActionPotentials=get_APs(xpulse,varargin)
 % Check Signal Features
 ActionPotentials=[];

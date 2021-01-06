@@ -83,3 +83,6 @@ fprintf('>>Table saved @: \n%s\n%s\n',...
 fprintf('>>APs Intel @: \n%s\n%s\n',...
     [FileDirSave,FolderNamePD],[Experiment,'.mat'])
 fprintf('>>For Visual Inspection Run: \n>>Action_Potentials_Check\n')
+%% Check Recordings:
+close all;
+Action_Potentials_Check;
